@@ -4,7 +4,16 @@ from os import getenv
 from time import time
 from src.console import logger
 
-bot = discord.Bot(
+class Bot(discord.Bot):
+    async def _async_cleanup(self):
+        logger.info("bot requested shutdown")
+        await self.change_presence(status=discord.Status.offline)
+
+    async def close(self):
+        await self._async_cleanup()
+        await super().close()
+
+bot = Bot(
     heartbeat_timeout=120.0,
     intents=discord.Intents.all()
 )
