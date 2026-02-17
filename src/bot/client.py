@@ -1,11 +1,13 @@
-import asyncio
-import discord
 from os import getenv
-from time import time
+
+import discord
+
+from src.cogs import cogs
 from src.console import logger
 
+
 class Bot(discord.Bot):
-    async def _async_cleanup(self):
+    async def _async_cleanup(self) -> None:
         logger.info("bot requested shutdown")
         await self.change_presence(status=discord.Status.offline)
 
@@ -21,7 +23,7 @@ start_time = None
 
 def main():
     global start_time
-    for extension in ["src.cogs.events", "src.cogs.admin", "src.cogs.voice_channel"]:
+    for extension in cogs:
         bot.load_extension(extension)
         logger.info(f"extension '{extension}' loaded successfully")
     try:
