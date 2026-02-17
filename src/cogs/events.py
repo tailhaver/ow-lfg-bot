@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 import discord
@@ -6,12 +7,15 @@ from discord.ext import commands
 from sqlalchemy import select
 
 from src.console import logger
-from src.database.database import Server, Session, init_models
+from src.database import Server, Session, init_models
 
 
 class EventsCog(commands.Cog):
     def __init__(self, bot: discord.Bot) -> None:
         self.bot = bot
+        loop = asyncio.get_event_loop()
+
+        loop.run_until_complete(init_models())
 
     @commands.Cog.listener()
     async def on_ready(self):
