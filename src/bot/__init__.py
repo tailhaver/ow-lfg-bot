@@ -5,7 +5,7 @@ from rich import print
 import platform
 
 print(f"""\r
-[bright_red]                                                          .o8[/bright_red] \t
+[indian_red1]                                                          .o8[/indian_red1] \t
 [light_salmon3]                                                         "888 [/light_salmon3]\t
 [orange1]oo.ooooo.  oooo    ooo  .ooooo.   .ooooo.  oooo d8b  .oooo888 [/orange1]\t[bright_white bold]pycord v{(lambda v: f"{v.major}.{v.minor}.{v.micro}")(discord.version_info)}[/bright_white bold]
 [yellow2] 888' `88b  `88.  .8'  d88' `"Y8 d88' `88b `888""8P d88' `888 [/yellow2]\t[bright_white bold]interpreter:[/bright_white bold]\t[grey70]{platform.python_implementation()} {platform.python_version()}[/grey70]
