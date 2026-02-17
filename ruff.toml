@@ -1,3 +1,5 @@
+exclude = ["migrations"]
+
 [lint]
 select = [
     "E", "W", "F",
