@@ -1,10 +1,12 @@
 __all__ = ["main"]
 
-import discord
-from rich import print
 import platform
 
-print(f"""\r
+import discord
+from rich import print
+
+print(
+    f"""\r
 [indian_red1]                                                          .o8[/indian_red1] \t
 [light_salmon3]                                                         "888 [/light_salmon3]\t
 [orange1]oo.ooooo.  oooo    ooo  .ooooo.   .ooooo.  oooo d8b  .oooo888 [/orange1]\t[bright_white bold]pycord v{(lambda v: f"{v.major}.{v.minor}.{v.micro}")(discord.version_info)}[/bright_white bold]
@@ -14,6 +16,7 @@ print(f"""\r
 [dodger_blue1] 888bod8P'     .8'     `Y8bod8P' `Y8bod8P' d888b    `Y8bod88P"[/dodger_blue1]\t
 [orchid] 888       .o..P'                                             [/orchid]\t
 [purple]o888o      `Y8P'                                              [/purple]\t
-""".strip())
+""".strip()
+)
 
 from src.bot.client import main  # noqa: E402

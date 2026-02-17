@@ -15,11 +15,10 @@ class Bot(discord.Bot):
         await self._async_cleanup()
         await super().close()
 
-bot = Bot(
-    heartbeat_timeout=120.0,
-    intents=discord.Intents.all()
-)
+
+bot = Bot(heartbeat_timeout=120.0, intents=discord.Intents.all())
 start_time = None
+
 
 def main():
     global start_time
@@ -27,9 +26,7 @@ def main():
         bot.load_extension(extension)
         logger.info(f"extension '{extension}' loaded successfully")
     try:
-        bot.run(
-            token=getenv("BOT_TOKEN")
-        )
+        bot.run(token=getenv("BOT_TOKEN"))
     except Exception as e:
         raise e
     finally:

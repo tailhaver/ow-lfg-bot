@@ -1,15 +1,18 @@
+import os
+
 import discord
 import git
-import os
 from discord.ext import commands
 from sqlalchemy import select
+
 from src.console import logger
-from src.database.database import init_models, Session, Server
+from src.database.database import Server, Session, init_models
+
 
 class EventsCog(commands.Cog):
-    def __init__(self, bot):
-        self.bot: discord.Bot = bot
-    
+    def __init__(self, bot: discord.Bot) -> None:
+        self.bot = bot
+
     @commands.Cog.listener()
     async def on_ready(self):
         await init_models()
@@ -18,12 +21,14 @@ class EventsCog(commands.Cog):
         repo = git.Repo(os.getcwd())
         branch = repo.head.reference
         activity = discord.CustomActivity(
-            name = f"Commit {branch.commit.hexsha[:7]} · {branch.commit.message}"
+            name=f"Commit {branch.commit.hexsha[:7]} · {branch.commit.message}"
         )
         await self.bot.change_presence(activity=activity)
-        logger.info(f"bot is ready: {len(self.bot.guilds)} guilds, {self.bot.user} ({self.bot.user.id})")
-        # logger.info(f"started successfully in approx. {round(time() - start_time, 2)} seconds")
-    
+        logger.info(
+            f"bot is ready: {len(self.bot.guilds)} guilds, {self.bot.user} ({self.bot.user.id})"
+        )
+        """logger.info(f"started successfully in approx. {round(time() - start_time, 2)} seconds")"""
+
     async def update_guilds(self) -> None:
         async with Session() as db_session:
             for guild in self.bot.guilds:
@@ -36,6 +41,6 @@ class EventsCog(commands.Cog):
                     db_session.add(new_server)
                     await db_session.commit()
 
-            
+
 def setup(bot: discord.Bot):
     bot.add_cog(EventsCog(bot))
