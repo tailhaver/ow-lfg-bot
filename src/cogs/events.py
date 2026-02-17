@@ -1,4 +1,6 @@
 import discord
+import git
+import os
 from discord.ext import commands
 from sqlalchemy import select
 from src.console import logger
@@ -13,6 +15,12 @@ class EventsCog(commands.Cog):
         await init_models()
         await self.update_guilds()
         await self.bot.change_presence(status=discord.Status.online)
+        repo = git.Repo(os.getcwd())
+        branch = repo.head.reference
+        activity = discord.CustomActivity(
+            name = f"Commit {branch.commit.hexsha[:7]} · {branch.commit.message}"
+        )
+        await self.bot.change_presence(activity=activity)
         logger.info(f"bot is ready: {len(self.bot.guilds)} guilds, {self.bot.user} ({self.bot.user.id})")
         # logger.info(f"started successfully in approx. {round(time() - start_time, 2)} seconds")
     
