@@ -43,7 +43,8 @@ class EventsCog(commands.Cog):
                 if server_entry is None:
                     new_server = Server(id=guild.id)
                     db_session.add(new_server)
-                    await db_session.commit()
+
+            await db_session.commit()
 
 
 def setup(bot: discord.Bot):
