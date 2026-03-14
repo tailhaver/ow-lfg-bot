@@ -12,4 +12,5 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "rich>=14.3.2",
     "sqlalchemy[asyncio]>=2.0.46",
+    "ujson>=5.12.0",
 ]
