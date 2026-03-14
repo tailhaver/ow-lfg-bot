@@ -76,7 +76,7 @@ async def generate_voice_leaderboard(ctx: discord.ApplicationContext, page: int 
     )
     author = getattr(ctx, "author", ctx.user)
     embed.set_author(name=author.name, icon_url=author.avatar)
-    embed.set_footer(text=f"Page {page} / {ceil(len(members)/10)}")
+    embed.set_footer(text=f"^Call time is updated upon leaving voice.\nPage {page} / {ceil(len(members)/10)}")
     return {"embed": embed, "view": LeaderboardView(1, ceil(len(members)/10), generate_voice_leaderboard)}
 
 class LeaderboardView(discord.ui.View):
