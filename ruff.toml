@@ -8,7 +8,6 @@ select = [
     "C4",
     "ICN",
     "RET",
-    "SIM",
     "TC",
     "N",
     "ERA",
