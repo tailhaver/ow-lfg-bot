@@ -30,7 +30,7 @@ def get_level(xp: int) -> tuple:
 
 async def generate_xp_leaderboard(ctx: discord.ApplicationContext, page: int = 1):
     async with Session() as session:
-        stmt = select(MemberLevel).where(MemberLevel.guild_id == ctx.guild_id, MemberLevel.vc_time > 0).order_by(MemberLevel.vc_time.desc())
+        stmt = select(MemberLevel).where(MemberLevel.guild_id == ctx.guild_id, MemberLevel.vc_time > 0).order_by(MemberLevel.xp.desc())
         result = await session.execute(stmt)
         members = result.scalars().all()
 
