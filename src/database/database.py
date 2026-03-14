@@ -10,7 +10,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 engine = create_async_engine(environ.get("DATABASE_PATH", "sqlite+aiosqlite:///"))
 
-
 class Base(DeclarativeBase):
     type_annotation_map = {datetime: TIMESTAMP(timezone=True)}
 
@@ -34,6 +33,23 @@ class VoiceChannel(Base):
         DateTime(timezone=True), default=func.now()
     )
 
+class MemberLevel(Base):
+    __tablename__ = "memberlevel"
+
+    guild_id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    xp: Mapped[int]
+    vc_time: Mapped[float]
+    in_vc: Mapped[bool] = mapped_column(default=False)
+    last_vc_join: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=func.now()
+    )
+    next_message_xp: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=func.now()
+    )
+    next_vc_xp: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=func.now()
+    )
 
 async def init_models():
     async with engine.begin() as conn:
