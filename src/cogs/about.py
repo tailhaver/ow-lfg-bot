@@ -24,7 +24,7 @@ Serving **{len(self.bot.guilds)}** guilds
 """
         embed = discord.Embed(description=description.strip(), color=0xFA9A1D)
         if self.bot.user.avatar:
-            embed.set_image(self.bot.user.avatar.url)
+            embed.set_image(url=self.bot.user.avatar.url)
         embed.set_footer(
             text="made with ♥ by taggie tailhaver",
             icon_url=(await self.bot.application_info()).owner.avatar.url,
