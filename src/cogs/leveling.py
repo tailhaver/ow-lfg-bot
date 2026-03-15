@@ -154,6 +154,12 @@ class LevellingCommands(commands.Cog):
             for member in members:
                 if datetime.now(UTC) < member.next_vc_xp.replace(tzinfo=UTC):
                     continue
+                members_in_vc = list(self.bot.get_guild(member.guild_id).get_member(member.id).voice.channel.members)
+                if members_in_vc == 1:
+                    continue
+                if self.bot.get_guild(member.guild_id).get_member(member.id).voice.self_mute \
+                        or self.bot.get_guild(member.guild_id).get_member(member.id).voice.self_deaf:
+                    continue
                 time_in_vc = (datetime.now(UTC) - member.last_vc_join.replace(tzinfo=UTC)).total_seconds()
                 half_hours_in_vc = time_in_vc // 1800 # used to add deteriorating returns for time in vc
                 message_xp = randbelow(10) + 10
