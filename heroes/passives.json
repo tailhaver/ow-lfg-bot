@@ -1,0 +1,37 @@
+{
+    "Bruiser": {
+        "emoji": "<:bruiser:1482191865213354094>",
+        "description": "Reduces critical damage received. While at critical health, gain movement speed",
+        "data": "Damage reduction: 25%\nMovement speed buff: 20%"
+    },
+    "Flanker": {
+        "emoji": "<:flanker:1482182823162155048>",
+        "description": "Health packs restore more health",
+        "data": "Healing: +75 from health packs"
+    },
+    "Sharpshooter": {
+        "emoji": "<:sharpshooter:1482211643986411591>",
+        "description": "Critical hits reduce your movement ability cooldowns.",
+        "data": "Cooldown reduction based on 0.75% of damage dealt"
+    },
+    "Specialist": {
+        "emoji": "<:specialist:1482539938716323963>",
+        "description": "Eliminating an enemy briefly increases your reload speed.",
+        "data": "Reload time: -33% for 3s"
+    },
+    "Berserker": {
+        "emoji": "<:berserker:1482206277911314562>",
+        "description": "Gain temporary health when dealing critical damage.",
+        "data": "50% of critical damage dealt (150 max) for 2s"
+    },
+    "Ignition": {
+        "emoji": "<:ignition:1482205811630673991>",
+        "description": "Hit enemies with fire attacks to burn them.",
+        "data": "Damage: 10/sec (base), 20/sec (fan the flames) for 3s\nDecay: 4s"
+    },
+    "Ironclad": {
+        "emoji": "<:ironclad:1482540515344781332>",
+        "description": "Reduces damage taken while transformed.",
+        "data": "Damage reduction: 20%"
+    }
+}

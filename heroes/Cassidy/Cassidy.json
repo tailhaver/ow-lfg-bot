@@ -1,0 +1,111 @@
+{
+    "name": "Cassidy",
+    "description": "Armed with his Peacekeeper revolver, the outlaw *Cole Cassidy* doles out justice on his own terms.",
+    "2d": "heroes/Cassidy/2d.webp",
+    "color": "DE6760",
+    "composition": {
+        "poke": 60,
+        "brawl": 100,
+        "dive": 50
+    },
+    "role": "damage",
+    "role_emoji": "<:damage:1482181096249753640>",
+    "subrole": "specialist",
+    "subrole_emoji": "<:specialist:1482539938716323963>",
+    "health": 250,
+    "abilities": {
+        "passive": ["Specialist"]
+    },
+    "weapons": {
+        "Peacekeeper": {
+            "effect": "hitscan",
+            "description": "Accurate, powerful revolver.",
+            "damage": "70 - 21",
+            "range": "25 - 35m",
+            "ammo": 6,
+            "projectile_radius": 0.07,
+            "spread": 0,
+            "tags": ["critical", "hitscan"],
+            "data": "140 damage/sec"
+        },
+        "Fan the Hammer": {
+            "effect": "hitscan",
+            "description": "Wildly fire remaining rounds.",
+            "damage": "50 - 15",
+            "range": "20 - 30m",
+            "ammo_consumption": "All remaining ammo",
+            "projectile_radius": 0.07,
+            "spread": 6,
+            "tags": ["hitscan"],
+            "data": "416.67 damage/sec\nFirst shot has no spread"
+        }
+    },
+    "special": {
+        "Combat Roll": {
+            "effect": ["Movement"],
+            "description": "Roll in the direction you're moving to take reduced damage and reload.",
+            "damage_reduction": 50,
+            "cooldown": 5,
+            "duration": 0.416,
+            "range": 6.22,
+            "movement_speed": 15,
+            "tags": ["evasive", "movement", "reloads"],
+            "data": "Damage to self is halved"
+        },
+        "Flashbang": {
+            "description": "Hinder enemies in front of you, slowing them and preventing them from using movement abilities.",
+            "cooldown": 12,
+            "damage": 75,
+            "startup": 0.128,
+            "recovery": 0.608,
+            "range": 7,
+            "radius": 3,
+            "movement_slow": 50,
+            "projectile_speed": 30,
+            "projectile_radius": 0.2,
+            "tags": ["area of effect", "cleansible", "hinder", "travel time"]
+        }
+    },
+    "ultimate": {
+        "Deadeye": {
+            "effect": ["hitscan"],
+            "description": "Face off against your enemies. Press Q to lock on, then Q or Mouse 1 to fire.",
+            "charge": 1800,
+            "damage": "150/sec (during warning), 300/sec (remaining)",
+            "ammo_consumption": "1 per target",
+            "startup": "0.704s (fired), 0.288s (canceled)",
+            "recovery": "0.288s (fired), 0.4s (canceled)",
+            "duration": "2s (warning), 7s (max)",
+            "max_range": 200,
+            "view_angle": 105,
+            "damage_reduction": "40% - 0%",
+            "movement_speed": "-70% - -35%",
+            "tags": ["channeled", "hitscan", "reloads"]
+        }
+    },
+    "perks": [
+        {
+            "Bang Bang": {
+                "description": "Cassidy throws a second Flashbang that travels farther, but both Flashbangs deal 40% reduced damage.",
+                "damage": "75 → 45",
+                "shots_per_volley": "1 → 2",
+                "max_range": "10m (2nd Flashbang)"
+            },
+            "Even the Odds": {
+                "description": "Regenerate 30 health per second for each enemy targeted by Deadeye."
+            }
+        },
+        {
+            "Rollin' Round-Ups": {
+                "description": "Combat Roll heals 15 health for each bullet reloaded."
+            },
+            "Silver Bullet": {
+                "description": "Peacekeeper's secondary fire is replaced with a piercing shot that inflicts bleeding. Combat Roll and Deadeye reset its cooldown.",
+                "cooldown": 8,
+                "damage": "70 - 21 (base), 70 (bleed)",
+                "range": "25 - 35",
+                "duration": 2.5
+            }
+        }
+    ]
+}

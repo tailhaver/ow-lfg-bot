@@ -1,0 +1,115 @@
+{
+    "name": "Mauga",
+    "description": "A charismatic and cunning Samoan warrior, *Mauga* thrives in the chaos of the battlefield and lives every day like it's his last.",
+    "2d": "heroes/Mauga/2d.webp",
+    "color": "ED8843",
+    "composition": {
+        "poke": 50,
+        "brawl": 100,
+        "dive": 50
+    },
+    "role": "tank",
+    "role_emoji": "<:tank:1482191889888182413>",
+    "subrole": "bruiser",
+    "subrole_emoji": "<:bruiser:1482191865213354094>",
+    "health": 425,
+    "armor": 150,
+    "shield": 0,
+    "abilities": {
+        "passive": ["Bruiser", "Berserker"]
+    },
+    "weapons": {
+        "Incendiary Chaingun": {
+            "effect": "hitscan",
+            "description": "Automatic weapon that ignites enemies on repeated impacts.",
+            "damage": "4 - 1.2 (direct), 15/sec (over time)",
+            "range": "30 - 40m, 15-20m (simultaneous fire)",
+            "ammo": 300,
+            "reload_time": 2,
+            "spread": "1° (base), 4° (simultaneous fire)",
+            "projectile_radius": "0.04m",
+            "duration": 4,
+            "tags": ["burning", "critical", "hitscan"],
+            "data": "72 damage/sec, 144 damage/sec (while burning)"
+        },
+        "Volatile Chaingun": {
+            "effect": "hitscan",
+            "description": "Automatic weapon that deals critical damage to burning enemies.",
+            "damage": "4 - 1.2",
+            "range": "30 - 40m, 15 - 20m (simultaneous fire)",
+            "ammo": 300,
+            "reload_time": 2,
+            "spread": "1° (base), 4° (simultaneous fire)",
+            "projectile_radius": "0.04m",
+            "tags": ["ability critical", "critical", "hitscan"],
+            "data": "72 damage/sec, 144 damage/sec (while burning)"
+        }
+    },
+    "special": {
+        "Overrun": {
+            "effect": ["shockwave", "movement"],
+            "description": "Charge forward to stomp and launch enemies. You are unstoppable while charging.",
+            "cooldown": "5s (7s Open Queue)",
+            "damage": "30 (collision), 75 (stomp, indirect), 150 (stomp, direct)",
+            "startup": 0.208,
+            "recovery": 0.496,
+            "duration": 2.6,
+            "range": "10.9 - 34.5m",
+            "radius": "2 - 7m",
+            "movement_speed_buff": 1.65,
+            "knockback_speed": "18 m/s (collision), 8.6 m/s (stomp, indirect), 6.9 m/s (stomp, direct)",
+            "tags": ["ability critical", "collide", "knockdown", "shockwave", "strong movement", "unstoppable"]
+        },
+        "Cardiac Overdrive": {
+            "effect": "area of effect",
+            "description": "Gain damage reduction and nearby allies heal themselves by dealing damage.",
+            "cooldown": 12,
+            "healing": "100% (self), 50% (allies)",
+            "damage_reduction": "40% (self)",
+            "startup": 0,
+            "duration": 3,
+            "radius": 10.5,
+            "tags": ["area of effect", "ignore barrier", "transformation"],
+            "data": "Movement range of 2.25m\n50% ignition on hit enemies, 33% on tanks"
+        }
+    },
+    "ultimate": {
+        "Cage Fight": {
+            "effect": "area of effect",
+            "description": "Deploy a barrier that traps yourself and enemies. Automatically reloads Mauga's Chainguns at the start of the ultimate.",
+            "charge": 2700,
+            "duration": 8,
+            "radius": 7.2,
+            "height": "6.3",
+            "tags": ["area of effect", "barrier", "deployable", "hinder", "ignore barrier", "reloads", "tether"]
+        },
+        "Vermillion Revival": {
+            "effect": "area of effect",
+            "description": "When dead, revive yourself in a fiery explosion.",
+            "charge": 2000,
+            "damage": "10 overt ime, 55 - 30",
+            "recovery": 0.048,
+            "duration": "3s, 2.3s (explosion), 0.7s (animation)",
+            "radius": "2.5 - 7m",
+            "tags": ["area of effect", "armor piercing", "burning", "invulnerable", "phased", "reloads"]
+        }
+    },
+    "perks": [
+        {
+            "Kinetic Bandolier": {
+                "description": "Overrun reloads up to 150 ammo during the first second of charging."
+            },
+            "Pyromaniac": {
+                "description": "Igniting enemies with Incendiary Chaingun grants 50 overhealth."
+            }
+        },
+        {
+            "Firewalker": {
+                "description": "Overrun ignites enemies hit."
+            },
+            "Combat Fuel": {
+                "description": "Critical hits grant Mauga 3 temporary overhealth on Cardiac Overdrive's next use, up to 150 overhealth."
+            }
+        }
+    ]
+}

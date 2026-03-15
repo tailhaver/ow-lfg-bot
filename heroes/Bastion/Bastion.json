@@ -1,0 +1,109 @@
+{
+    "name": "Bastion",
+    "description": "Once a frontline combatant in the devastating Omnic Crisis, this curious *Bastion* unit now explores the world, fascinated by nature but wary of a fearful humanity.",
+    "2d": "heroes/Bastion/2d.webp",
+    "color": "E4EF7B",
+    "composition": {
+        "poke": 60,
+        "brawl": 100,
+        "dive": 0
+    },
+    "role": "damage",
+    "role_emoji": "<:damage:1482181096249753640>",
+    "subrole": "specialist",
+    "subrole_emoji": "<:specialist:1482539938716323963>",
+    "health": 250,
+    "armor": 100,
+    "abilities": {
+        "passive": ["Specialist", "Ironclad"]
+    },
+    "weapons": {
+        "Configuration: Recon": {
+            "effect": "hitscan",
+            "description": "Mobile, with a lightweight and highly accurate weapon.",
+            "damage": "23 - 7.5",
+            "range": "30 - 50m",
+            "ammo": 25,
+            "projectile_radius": 0.07,
+            "spread": 0,
+            "tags": ["critical", "hitscan"],
+            "data": "138 damage/sec"
+        }
+    },
+    "special": {
+        "A-36 Tactical Grenade": {
+            "effect": ["Arcing projectile", "Area of effect"],
+            "description": "Fire a bomb that bounces off walls and explodes when it hits enemies or the ground.",
+            "cooldown": 8,
+            "damage": "15 (direct hit), 100 - 50 (splash)",
+            "startup": 0,
+            "recovery": 0.496,
+            "duration": "0.37s (explosion delay)",
+            "radius": "2 - 4m",
+            "knockback_speed": "17.5 m/s (self), 10.6 m/s (enemy)",
+            "spread": 20,
+            "tags": ["area of effect", "self-damage", "sticky", "travel time"],
+            "data": "Damage to self is halved"
+        },
+        "Reconfigure": {
+            "description": "Switch between weapon configurations.",
+            "cooldown": 12,
+            "startup": 0.992,
+            "recovery": 0.496,
+            "duration": "6s",
+            "tags": ["reloads", "transformation"]
+        },
+        "Configuration: Assault": {
+            "description": "A slow moving tank with a powerful rotary cannon.",
+            "damage": "12 - 3.6",
+            "range": "30 - 50m",
+            "projectile_radius": 0.04,
+            "spread": 2,
+            "tags": ["hitscan"],
+            "data": "360 damage/sec"
+        }
+    },
+    "ultimate": {
+        "Configuration: Artillery": {
+            "effect": ["projectile", "area of effect"],
+            "description": "Become immobile and fire up to three powerful artillery shells.",
+            "charge": 2050,
+            "damage": "550 (center), 250 - 50 (area of effect)",
+            "ammo": 3,
+            "startup": 1.206,
+            "recovery": 0.496,
+            "duration": 8,
+            "radius": "1 - 6m",
+            "movement_speed": 25,
+            "tags": ["area of effect", "reloads", "travel time"]
+        }
+    },
+    "perks": [
+        {
+            "Configuration Reload": {
+                "description": "Refresh the cooldown of A-36 Tactical Grenade when changing configurations."
+            },
+            "Armored Artillery": {
+                "description": "Configuration: Artillery grants 300 temporary overhealth."
+            }
+        },
+        {
+            "Lindholm Explosives": {
+                "description": "Configuration: Assault's Weapon slowly fires explosive shells instead of a rotary cannon.",
+                "damage": "50 (direct hit), 90 - 27 (splash, emeny), 36 - 10.8 (splash, self)",
+                "radius": 3.5,
+                "knockback_speed": "10.9 m/s (self), 7.7 m/s (enemy)",
+                "projectile_speed": 100,
+                "projectile_radius": 0.275,
+                "data": "186 damage/sec"
+            },
+            "Self-Repair": {
+                "description": "Press E to rapidly heal yourself.",
+                "healing": "90/s",
+                "startup": 0.24,
+                "recovery": 0.24,
+                "duration": "0.5s - 3.3s"
+            }
+        }
+    ]
+}

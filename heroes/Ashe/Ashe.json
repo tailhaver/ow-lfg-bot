@@ -1,0 +1,106 @@
+{
+    "name": "Ashe",
+    "description": "*Ashe* is the ambitious and calculating leader of the Deadlock Rebels Gang and a respected figure in the criminal underworld.",
+    "2d": "heroes/Ashe/2d.webp",
+    "color": "65343C",
+    "composition": {
+        "poke": 100,
+        "brawl": 50,
+        "dive": 0
+    },
+    "role": "damage",
+    "role_emoji": "<:damage:1482181096249753640>",
+    "subrole": "sharpshooter",
+    "subrole_emoji": "<:sharpshooter:1482211643986411591>",
+    "health": 250,
+    "abilities": {
+        "passive": ["Sharpshooter"]
+    },
+    "weapons": {
+        "The Viper": {
+            "effect": "hitscan",
+            "description": "Semi-automatic rifle.",
+            "damage": "35 - 10.5",
+            "range": "20 - 40m",
+            "ammo": 12,
+            "projectile_radius": 0.07,
+            "spread": 1.85,
+            "tags": ["critical", "hitscan"],
+            "data": "136.5 damage/sec\nSpread resets after 1.5 seconds since the last unscoped shot. Spread starts on the 3rd shot and reaches its maximum upon the 6th shot."
+        },
+        "Take Aim (ADS)": {
+            "effect": "hitscan",
+            "description": "Hold to zoom in, increasing damage and accuracy but slowing rate of fire.",
+            "damage": "75 - 22.5",
+            "range": "35 - 55m",
+            "ammo": 12,
+            "projectile_radius": 0.07,
+            "tags": ["critical", "hitscan"],
+            "data": "114.33 damage/sec"
+        }
+    },
+    "special": {
+        "Coach Gun": {
+            "effect": ["shotgun", "movement"],
+            "description": "Blast enemies in front of you and knock yourself backwards.",
+            "cooldown": 10,
+            "charges": 2,
+            "damage": "6 per shot, 90 per volley",
+            "startup": 0.160,
+            "recovery": 0.384,
+            "range": "9.4m (self), 15m (enemy)",
+            "knockback_speed": "18 m/s (self), 20 m/s (enemy)",
+            "spread": 20,
+            "tags": ["hitscan", "strong movement"]
+        },
+        "Dynamite": {
+            "effect": ["arcing projectile", "area of effect"],
+            "description": "Strike nearby enemies while dodging all damage.",
+            "cooldown": 12,
+            "damage": "50 - 20 (explosion), 100 over 5s (burn)",
+            "startup": 0,
+            "recovery": 0.54,
+            "duration": "2s (explosion delay), 5s (burn)",
+            "radius": "1.5 - 5m",
+            "projectile_speed": 25,
+            "tags": ["area of effect", "burning", "invulnerable", "melee", "phased", "strong movement"],
+            "data": "Damage to self is halved"
+        }
+    },
+    "ultimate": {
+        "B.O.B": {
+            "effect": ["melee", "movement", "hitscan"],
+            "description": "Deploy Bob. He charges forward and knocks enemies into the air, then attacks with his arm cannons.",
+            "charge": 2450,
+            "damage": "120 (charge), 17 (arm cannons)",
+            "health": 1000,
+            "recovery": 0.496,
+            "duration": 10,
+            "max_range": "70m (charge), 40m (arm cannons)",
+            "movement_speed": 15,
+            "spread": 1.45,
+            "tags": ["collide", "deployable", "hitscan", "immobilize", "movement"]
+        }
+    },
+    "perks": [
+        {
+            "Remote Detonator": {
+                "description": "After using Dynamite, pressing Ability 2 again causes it to explode after a 0.5 second delay."
+            },
+            "Double-Barreled": {
+                "description": "Knocking an enemy back with Coach Gun briefly allows it to be used again with 25% reduced knockback.",
+                "duration": 1,
+                "knockback_speed": 13.5
+            }
+        },
+        {
+            "Viper's Sting": {
+                "description": "Hitting 2 consecutive scoped shots on a target deals 25 extra damage and reloads 1 ammo."
+            },
+            "Airburst": {
+                "description": "Dynamite has a 40% increased detonation radius while airborne and refunds 3 ammo when thrown.",
+                "radius": "5m → 7m"
+            }
+        }
+    ]
+}
