@@ -41,14 +41,16 @@ async def create_user_level(guild_id: int, member_id: int):
         await session.refresh(level)
     return level
 
-async def generate_level_embed(ctx: discord.ApplicationContext):
+async def generate_level_embed(ctx: discord.ApplicationContext, member: discord.Member | None = None):
+    if member is None:
+        member = ctx.author
     async with Session() as session:
-        stmt = select(MemberLevel).where(MemberLevel.guild_id == ctx.guild_id, MemberLevel.id == ctx.author.id)
+        stmt = select(MemberLevel).where(MemberLevel.guild_id == ctx.guild_id, MemberLevel.id == member.id)
         result = await session.execute(stmt)
         level_info = result.scalars().one_or_none()
 
     if level_info is None:
-        level_info = await create_user_level(ctx.guild_id, ctx.author.id)
+        level_info = await create_user_level(ctx.guild_id, member.id)
 
     level, progress, xp_for_next_level = get_level(level_info.xp)
 
@@ -64,7 +66,7 @@ async def generate_level_embed(ctx: discord.ApplicationContext):
         description=description.strip(),
         color=0xFA9C1D
     )
-    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
+    embed.set_author(name=member.name, icon_url=member.avatar)
     return embed
 
 class LevellingCommands(commands.Cog):
@@ -79,8 +81,13 @@ class LevellingCommands(commands.Cog):
         name="level",
         description=""
     )
-    async def level(self, ctx: discord.ApplicationContext) -> None:
-        embed = await generate_level_embed(ctx)
+    @discord.option(
+        "user",
+        type=discord.SlashCommandOptionType.user,
+        required=False,
+    )
+    async def level(self, ctx: discord.ApplicationContext, user: discord.Member) -> None:
+        embed = await generate_level_embed(ctx, user)
         await ctx.respond(embed=embed, ephemeral=True)
 
     @commands.Cog.listener()

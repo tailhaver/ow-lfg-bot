@@ -146,7 +146,7 @@ class LeaderboardCommands(commands.Cog):
         choices=["level", "vc"],
         default="level",
     )
-    async def level(self, ctx: discord.ApplicationContext, type: str) -> None:
+    async def leaderboard(self, ctx: discord.ApplicationContext, type: str) -> None:
         match type:
             case "level":
                 function = generate_xp_leaderboard
