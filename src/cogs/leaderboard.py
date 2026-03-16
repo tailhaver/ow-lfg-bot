@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 from sqlalchemy import select
 
-from src.database.database import MemberLevel, Session
+from src.database.database import Member, Session
 
 
 def get_total_xp_for_level(level: int) -> int:
@@ -31,9 +31,9 @@ def get_level(xp: int) -> tuple:
 async def generate_xp_leaderboard(ctx: discord.ApplicationContext, page: int = 1):
     async with Session() as session:
         stmt = (
-            select(MemberLevel)
-            .where(MemberLevel.guild_id == ctx.guild_id, MemberLevel.xp > 0)
-            .order_by(MemberLevel.xp.desc())
+            select(Member)
+            .where(Member.guild_id == ctx.guild_id, Member.xp > 0)
+            .order_by(Member.xp.desc())
         )
         result = await session.execute(stmt)
         members = result.scalars().all()
@@ -70,9 +70,9 @@ def format_time(seconds: float) -> str:
 async def generate_voice_leaderboard(ctx: discord.ApplicationContext, page: int = 1):
     async with Session() as session:
         stmt = (
-            select(MemberLevel)
-            .where(MemberLevel.guild_id == ctx.guild_id, MemberLevel.vc_time > 0)
-            .order_by(MemberLevel.vc_time.desc())
+            select(Member)
+            .where(Member.guild_id == ctx.guild_id, Member.vc_time > 0)
+            .order_by(Member.vc_time.desc())
         )
         result = await session.execute(stmt)
         members = result.scalars().all()
