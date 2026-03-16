@@ -1,7 +1,7 @@
-__all__ = ["Server", "Session", "VoiceChannel", "MemberLevel", "init_models"]
+__all__ = ["Server", "Session", "VoiceChannel", "Member", "init_models"]
 
 from src.database.database import (
-    MemberLevel,
+    Member,
     Server,
     Session,
     VoiceChannel,

@@ -1,4 +1,4 @@
-"""add MemberLevel table
+"""add Member table
 
 Revision ID: cbf61c4ebc8d
 Revises: 7c385252f203

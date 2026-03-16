@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands, tasks
 from sqlalchemy import select, update
 
-from src.database.database import MemberLevel, Session
+from src.database.database import Member, Session
 
 
 def get_total_xp_for_level(level: int) -> int:
@@ -30,7 +30,7 @@ def get_level(xp: int) -> tuple:
 
 async def create_user_level(guild_id: int, member_id: int):
     async with Session() as session:
-        level = MemberLevel(
+        level = Member(
             guild_id=guild_id,
             id=member_id,
             xp=0,
@@ -43,7 +43,7 @@ async def create_user_level(guild_id: int, member_id: int):
 
 async def generate_level_embed(ctx: discord.ApplicationContext):
     async with Session() as session:
-        stmt = select(MemberLevel).where(MemberLevel.guild_id == ctx.guild_id, MemberLevel.id == ctx.author.id)
+        stmt = select(Member).where(Member.guild_id == ctx.guild_id, Member.id == ctx.author.id)
         result = await session.execute(stmt)
         level_info = result.scalars().one_or_none()
 
@@ -90,7 +90,7 @@ class LevellingCommands(commands.Cog):
         if message is None or message.author.bot:
             return
         async with Session() as session:
-            stmt = select(MemberLevel).where(MemberLevel.guild_id == message.guild.id, MemberLevel.id == message.author.id)
+            stmt = select(Member).where(Member.guild_id == message.guild.id, Member.id == message.author.id)
             result = await session.execute(stmt)
             member = result.scalars().one_or_none()
             if member is None:
@@ -100,8 +100,8 @@ class LevellingCommands(commands.Cog):
 
             message_xp = randbelow(10) + 10
             stmt = (
-                update(MemberLevel)
-                .where(MemberLevel.guild_id == message.guild.id, MemberLevel.id == message.author.id)
+                update(Member)
+                .where(Member.guild_id == message.guild.id, Member.id == message.author.id)
                 .values(xp=member.xp + message_xp, next_message_xp=datetime.now(UTC) + timedelta(seconds=60))
             )
             await session.execute(stmt)
@@ -114,7 +114,7 @@ class LevellingCommands(commands.Cog):
         if member is None or member.bot:
             return
         async with Session() as session:
-            stmt = select(MemberLevel).where(MemberLevel.guild_id == member.guild.id, MemberLevel.id == member.id)
+            stmt = select(Member).where(Member.guild_id == member.guild.id, Member.id == member.id)
             result = await session.execute(stmt)
             member_info = result.scalars().one_or_none()
             if member_info is None:
@@ -130,8 +130,8 @@ class LevellingCommands(commands.Cog):
             if member_info.in_vc and in_vc:
                 return
             stmt = (
-                update(MemberLevel)
-                .where(MemberLevel.guild_id == member.guild.id, MemberLevel.id == member.id)
+                update(Member)
+                .where(Member.guild_id == member.guild.id, Member.id == member.id)
                 .values(next_vc_xp=datetime.now(UTC) + timedelta(seconds=300), in_vc=in_vc, last_vc_join=last_vc_join, vc_time=member_info.vc_time + time_in_vc)
             )
             await session.execute(stmt)
@@ -140,7 +140,7 @@ class LevellingCommands(commands.Cog):
     @tasks.loop(minutes=1)
     async def add_voice_call_time(self) -> None:
         async with Session() as session:
-            stmt = select(MemberLevel).where(MemberLevel.in_vc)
+            stmt = select(Member).where(Member.in_vc)
             result = await session.execute(stmt)
             members = result.scalars().all()
 
@@ -151,8 +151,8 @@ class LevellingCommands(commands.Cog):
                 half_hours_in_vc = time_in_vc // 1800 # used to add deteriorating returns for time in vc
                 message_xp = randbelow(10) + 10
                 stmt = (
-                    update(MemberLevel)
-                    .where(MemberLevel.guild_id == member.guild_id, MemberLevel.id == member.id)
+                    update(Member)
+                    .where(Member.guild_id == member.guild_id, Member.id == member.id)
                     .values(xp=member.xp + message_xp, next_vc_xp=datetime.now(UTC) + timedelta(seconds=300 + 60 * half_hours_in_vc))
                 )
                 await session.execute(stmt)
