@@ -25,7 +25,7 @@ class EventsCog(commands.Cog):
         repo = git.Repo(os.getcwd())
         branch = repo.head.reference
         activity = discord.CustomActivity(
-            name=f"Commit {branch.commit.hexsha[:7]} · {branch.commit.message}"
+            name=f"Commit {branch.commit.hexsha[:7]} · {branch.commit.message.split('\n')[0]}"
         )
         await self.bot.change_presence(activity=activity)
         logger.info(

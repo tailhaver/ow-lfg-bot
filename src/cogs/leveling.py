@@ -48,7 +48,7 @@ async def generate_level_embed(ctx: discord.ApplicationContext):
         level_info = result.scalars().one_or_none()
 
     if level_info is None:
-        level_info = await create_user_level(ctx.guild_id, ctx.author.id)
+        level_info = await create_user_level(ctx.guild_id, member.id)
 
     level, progress, xp_for_next_level = get_level(level_info.xp)
 
