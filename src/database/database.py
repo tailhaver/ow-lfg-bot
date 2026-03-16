@@ -35,8 +35,8 @@ class VoiceChannel(Base):
     )
 
 
-class MemberLevel(Base):
-    __tablename__ = "memberlevel"
+class Member(Base):
+    __tablename__ = "Member"
 
     guild_id: Mapped[int] = mapped_column(primary_key=True)
     id: Mapped[int] = mapped_column(primary_key=True)
