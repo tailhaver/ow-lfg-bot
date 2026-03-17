@@ -311,7 +311,7 @@ class AdminCommands(commands.Cog):
                     await db_session.commit()
 
             embed = discord.Embed(
-                description=f"### ✅ Successfully added {role.mention} to the shop!\nCurrent roles:\n{'\n'.join([f'-# <@&{k}>: <:mythic_prism:1483233288951955538> {v}' for k, v in roles.items()])}",
+                description=f"### ✅ Successfully added {role.mention} to the shop!",
                 color=0xFA9C1D,
             )
             await ctx.respond(embed=embed, ephemeral=True)
