@@ -1,7 +1,7 @@
 from datetime import datetime
 from os import environ
 
-from sqlalchemy import TIMESTAMP, DateTime, func
+from sqlalchemy import JSON, TIMESTAMP, DateTime, func, text
 from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
@@ -22,6 +22,9 @@ class Server(Base):
     log_channel: Mapped[int] = mapped_column(nullable=True)
     logging_enabled: Mapped[bool] = mapped_column(default=False)
     voice_channel_category: Mapped[int] = mapped_column(nullable=True)
+    mythic_prism_roles: Mapped[JSON] = mapped_column(
+        JSON, default={}, server_default=text("'{}'")
+    )
 
 
 class VoiceChannel(Base):
@@ -51,6 +54,10 @@ class Member(Base):
     )
     next_vc_xp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=func.now()
+    )
+    spent_prisms: Mapped[int] = mapped_column(default=0)
+    mythic_inventory: Mapped[JSON] = mapped_column(
+        JSON, default={}, server_default=text("'{}'")
     )
 
 

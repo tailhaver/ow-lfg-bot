@@ -1,3 +1,5 @@
+from math import ceil
+
 import discord
 from discord.ext import commands
 from sqlalchemy import select, update
@@ -5,21 +7,99 @@ from sqlalchemy import select, update
 from src.bot.logging import send_log
 from src.database.database import Server, Session
 
-"""class VCButtons1(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
 
-    @discord.ui.button(label="New voice channel", custom_id="new-vc-button", style=discord.ButtonStyle.primary)
-    async def callback(self, button, interaction: discord.Interaction):
-        await interaction.response.send_message(view=)
+async def get_mythic_prism_role_list(ctx: discord.ApplicationContext, page: int = 1):
+    try:
+        author = getattr(ctx, "author", ctx.user)
+        async with Session() as db_session:
+            stmt = select(Server).where(Server.id == ctx.guild_id)
+            result = await db_session.execute(stmt)
+            server_data = result.scalars().one_or_none()
+            if server_data is not None:
+                roles: dict = server_data.mythic_prism_roles
+            else:
+                raise Exception
+            paginated = list(roles.items())[20 * (page - 1) : 20 * page]
 
-class VCButtonsMode(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
+        embed = discord.Embed(
+            description=f"### Current roles:\n{'\n'.join([f'-# <@&{k}>: <:mythic_prism:1483233288951955538> {v}' for k, v in paginated])}",
+            color=0xFA9C1D,
+        )
+        embed.set_author(name=author.name, icon_url=author.avatar)
+        embed.set_footer(text=f"Page {page} / {ceil(len(paginated) / 20)}")
+        return {"embed": embed, "view": MythicView(page, ceil(len(paginated) / 20))}
+    except Exception:
+        embed = discord.Embed(
+            description="❌ Unable to get server from the database!", color=0xFA9C1D
+        )
+        embed.set_author(name=author.name, icon_url=author.avatar)
+        return {"embed": embed}
 
-    @discord.ui.button(label="5v5 / Role QUeue", custom_id="new-vc-button-5v5", style=discord.ButtonStyle.primary)
-    async def callback(self, button, interaction: discord.Interaction):
-        await interaction.response.send_message(view=)"""
+
+class MythicView(discord.ui.View):
+    def __init__(
+        self,
+        current_page: int,
+        max_pages: int,
+        function=get_mythic_prism_role_list,  # noqa: ANN001
+    ) -> None:
+        super().__init__()
+        self.current_page = current_page
+        self.max_pages = max_pages
+        self.function = function
+        self.button_callback()
+
+    def button_callback(self) -> None:
+        for child in self.children:
+            if isinstance(child, discord.ui.Button) and child.emoji:
+                if child.emoji.name in ["⏪", "◀️"]:
+                    child.disabled = self.current_page <= 1
+                elif child.emoji.name in ["▶️", "⏩"]:
+                    child.disabled = self.current_page >= self.max_pages
+
+    @discord.ui.button(style=discord.ButtonStyle.primary, emoji="⏪", row=0)
+    async def double_left_callback(
+        self, _: discord.ui.Button, interaction: discord.Interaction
+    ) -> None:
+        self.current_page = 1
+        self.button_callback()
+        await interaction.response.edit_message(
+            embed=(await self.function(interaction, self.current_page))["embed"],
+            view=self,
+        )
+
+    @discord.ui.button(style=discord.ButtonStyle.primary, emoji="◀️", row=0)
+    async def left_callback(
+        self, _: discord.ui.Button, interaction: discord.Interaction
+    ) -> None:
+        self.current_page = max(self.current_page - 1, 1)
+        self.button_callback()
+        await interaction.response.edit_message(
+            embed=(await self.function(interaction, self.current_page))["embed"],
+            view=self,
+        )
+
+    @discord.ui.button(style=discord.ButtonStyle.primary, emoji="▶️", row=0)
+    async def right_callback(
+        self, _: discord.ui.Button, interaction: discord.Interaction
+    ) -> None:
+        self.current_page = min(self.current_page + 1, self.max_pages)
+        self.button_callback()
+        await interaction.response.edit_message(
+            embed=(await self.function(interaction, self.current_page))["embed"],
+            view=self,
+        )
+
+    @discord.ui.button(style=discord.ButtonStyle.primary, emoji="⏩", row=0)
+    async def double_right_callback(
+        self, _: discord.ui.Button, interaction: discord.Interaction
+    ) -> None:
+        self.current_page = self.max_pages
+        self.button_callback()
+        await interaction.response.edit_message(
+            embed=(await self.function(interaction, self.current_page))["embed"],
+            view=self,
+        )
 
 
 class AdminCommands(commands.Cog):
@@ -201,18 +281,148 @@ class AdminCommands(commands.Cog):
         )
         await send_log(ctx, server_data.log_channel, embed)
 
-    """@admin_group.command(
-        name="create_vc_buttons",
-        description="Send a message with buttons to create a voice channel automatically",
+    @admin_group.command(
+        name="add_mythic_role",
+        description="Add a Mythic role to the shop",
     )
     @discord.default_permissions(administrator=True)
-    @discord.option("channel", type=discord.SlashCommandOptionType.channel, channel_types=[discord.ChannelType.text])
-    async def admin_create_vc_buttons_command(
-        self,
-        ctx: discord.ApplicationContext,
-        channel: discord.TextChannel
+    @discord.option(
+        "role",
+        type=discord.SlashCommandOptionType.role,
+    )
+    @discord.option("cost", type=int, required=False, default=10)
+    async def add_mythic_role(
+        self, ctx: discord.ApplicationContext, role: discord.Role, cost: int
     ) -> None:
-        pass"""
+        try:
+            async with Session() as db_session:
+                stmt = select(Server).where(Server.id == ctx.guild_id)
+                result = await db_session.execute(stmt)
+                server_data = result.scalars().one_or_none()
+                if server_data is not None:
+                    roles: dict = server_data.mythic_prism_roles
+                    roles[role.id] = cost
+                    stmt = (
+                        update(Server)
+                        .where(Server.id == ctx.guild_id)
+                        .values(mythic_prism_roles=roles)
+                    )
+                    await db_session.execute(stmt)
+                    await db_session.commit()
+
+            embed = discord.Embed(
+                description=f"### ✅ Successfully added {role.mention} to the shop!\nCurrent roles:\n{'\n'.join([f'-# <@&{k}>: <:mythic_prism:1483233288951955538> {v}' for k, v in roles.items()])}",
+                color=0xFA9C1D,
+            )
+            await ctx.respond(embed=embed, ephemeral=True)
+        except Exception as e:
+            embed = discord.Embed(
+                description=f"❌ Unable to add role to the shop!\n-# exception: {e}",
+                color=0xFA9C1D,
+            )
+            await ctx.respond(embed=embed, ephemeral=True)
+            return
+
+    @admin_group.command(
+        name="remove_mythic_role",
+        description="Remove a Mythic role from the shop (but not inventories)",
+    )
+    @discord.default_permissions(administrator=True)
+    @discord.option(
+        "role",
+        type=discord.SlashCommandOptionType.role,
+    )
+    async def remove_mythic_role(
+        self, ctx: discord.ApplicationContext, role: discord.Role
+    ) -> None:
+        try:
+            async with Session() as db_session:
+                stmt = select(Server).where(Server.id == ctx.guild_id)
+                result = await db_session.execute(stmt)
+                server_data = result.scalars().one_or_none()
+                if server_data is not None:
+                    roles: dict = server_data.mythic_prism_roles
+                    roles.pop(str(role.id))
+                    stmt = (
+                        update(Server)
+                        .where(Server.id == ctx.guild_id)
+                        .values(mythic_prism_roles=roles)
+                    )
+                    await db_session.execute(stmt)
+                    await db_session.commit()
+
+            embed = discord.Embed(
+                description=f"### ✅ Successfully removed {role.mention} from the shop!",
+                color=0xFA9C1D,
+            )
+            await ctx.respond(embed=embed, ephemeral=True)
+        except KeyError:
+            embed = discord.Embed(
+                description="❌ That role isn't in the shop!", color=0xFA9C1D
+            )
+            await ctx.respond(embed=embed, ephemeral=True)
+        except Exception:
+            embed = discord.Embed(
+                description="❌ Unable to remove role from the shop!", color=0xFA9C1D
+            )
+            await ctx.respond(embed=embed, ephemeral=True)
+
+    @admin_group.command(
+        name="change_mythic_price",
+        description="Change the price of a Mythic role in the shop",
+    )
+    @discord.default_permissions(administrator=True)
+    @discord.option(
+        "role",
+        type=discord.SlashCommandOptionType.role,
+    )
+    @discord.option("cost", type=int, required=False, default=10)
+    async def change_mythic_price(
+        self, ctx: discord.ApplicationContext, role: discord.Role, cost: int
+    ) -> None:
+        try:
+            async with Session() as db_session:
+                stmt = select(Server).where(Server.id == ctx.guild_id)
+                result = await db_session.execute(stmt)
+                server_data = result.scalars().one_or_none()
+                if server_data is not None:
+                    roles: dict = server_data.mythic_prism_roles
+                    if role.id not in roles:
+                        raise KeyError
+                    roles[str(role.id)] = cost
+                    stmt = (
+                        update(Server)
+                        .where(Server.id == ctx.guild_id)
+                        .values(mythic_prism_roles=roles)
+                    )
+                    await db_session.execute(stmt)
+                    await db_session.commit()
+
+            embed = discord.Embed(
+                description=f"### ✅ Changed the cost of {role.mention} to {cost}!",
+                color=0xFA9C1D,
+            )
+            await ctx.respond(embed=embed, ephemeral=True)
+        except KeyError:
+            embed = discord.Embed(
+                description="❌ That role isn't in the shop!", color=0xFA9C1D
+            )
+            await ctx.respond(embed=embed, ephemeral=True)
+        except Exception as e:
+            embed = discord.Embed(
+                description=f"❌ Unable to change role cost!\n-# exception: {e}",
+                color=0xFA9C1D,
+            )
+            await ctx.respond(embed=embed, ephemeral=True)
+            return
+
+    @admin_group.command(
+        name="list_mythic_roles",
+        description="List all Mythic roles currently in the shop",
+    )
+    @discord.default_permissions(administrator=True)
+    async def list_mythic_roles(self, ctx: discord.ApplicationContext) -> None:
+        await ctx.respond(**await get_mythic_prism_role_list(ctx, 1), ephemeral=True)
 
 
 def setup(bot: discord.Bot):
