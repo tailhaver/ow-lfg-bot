@@ -23,7 +23,7 @@ class Server(Base):
     logging_enabled: Mapped[bool] = mapped_column(default=False)
     voice_channel_category: Mapped[int] = mapped_column(nullable=True)
     mythic_prism_roles: Mapped[JSON] = mapped_column(
-        JSON, default={}, server_default=text("'{}'")
+        JSON, default={}, server_default=text("'{}'"), nullable=True
     )
 
 
@@ -55,9 +55,9 @@ class Member(Base):
     next_vc_xp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=func.now()
     )
-    spent_prisms: Mapped[int] = mapped_column(default=0)
+    spent_prisms: Mapped[int] = mapped_column(default=0, nullable=True)
     mythic_inventory: Mapped[JSON] = mapped_column(
-        JSON, default={}, server_default=text("'{}'")
+        JSON, default={}, server_default=text("'{}'"), nullable=True
     )
 
 
