@@ -57,7 +57,7 @@ async def generate_xp_leaderboard(ctx: discord.ApplicationContext, page: int = 1
 
 def format_time(seconds: float) -> str:
     time_str = ""
-    if days := seconds // 86400 >= 1:
+    if (days := seconds // 86400) >= 1:
         time_str += f"{days} days "
     seconds -= days * 86400
     hours = seconds // 3600
