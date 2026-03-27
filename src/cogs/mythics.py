@@ -37,6 +37,7 @@ async def get_mythic_prism_role_list(ctx: discord.ApplicationContext, page: int 
         )
         result = await db_session.execute(stmt)
         member = result.scalars().one_or_none()
+        max_pages = ceil(len(roles.items()) / 20)
         paginated = list(roles.items())[20 * (page - 1) : 20 * page]
         paginated = [
             (role[0], {"cost": "(owned)", "name": role[1]["name"]})
@@ -45,14 +46,13 @@ async def get_mythic_prism_role_list(ctx: discord.ApplicationContext, page: int 
             for role in paginated
         ]
         paginated.sort(key=lambda role: role[1] == "owned", reverse=True)
-    return paginated
+    return paginated, max_pages
 
 
 async def create_shop_embed(
     ctx: discord.ApplicationContext, page: int = 1
 ) -> discord.Embed:
-    roles_list = await get_mythic_prism_role_list(ctx, page)
-    max_pages = ceil(len(roles_list) / 20)
+    roles_list, max_pages = await get_mythic_prism_role_list(ctx, page)
     prism_count = await get_mythic_prism_count(ctx)
     description = f"""
 ### Mythic Shop
