@@ -75,6 +75,7 @@ class RoleSelect(discord.ui.Select):
             member = result.scalars().one_or_none()
             if member is None:
                 raise Exception
+            spent_prisms = 0 if member.spent_prisms is None else member.spent_prisms
             stmt = (
                 update(Member)
                 .where(
@@ -82,7 +83,7 @@ class RoleSelect(discord.ui.Select):
                     Member.id == interaction.user.id,
                 )
                 .values(
-                    spent_prisms=member.spent_prisms + roles[selected_role_id]["cost"],
+                    spent_prisms=spent_prisms + roles[selected_role_id]["cost"],
                     mythic_inventory=member.mythic_inventory + [selected_role_id],
                 )
             )
