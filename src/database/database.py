@@ -57,7 +57,7 @@ class Member(Base):
     )
     spent_prisms: Mapped[int] = mapped_column(default=0, nullable=True)
     mythic_inventory: Mapped[JSON] = mapped_column(
-        JSON, default={}, server_default=text("'{}'"), nullable=True
+        JSON, default=[], server_default=text("'[]'"), nullable=True
     )
 
 

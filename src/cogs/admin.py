@@ -1,105 +1,10 @@
-from math import ceil
-
 import discord
 from discord.ext import commands
 from sqlalchemy import select, update
 
 from src.bot.logging import send_log
 from src.database.database import Server, Session
-
-
-async def get_mythic_prism_role_list(ctx: discord.ApplicationContext, page: int = 1):
-    try:
-        author = getattr(ctx, "author", ctx.user)
-        async with Session() as db_session:
-            stmt = select(Server).where(Server.id == ctx.guild_id)
-            result = await db_session.execute(stmt)
-            server_data = result.scalars().one_or_none()
-            if server_data is not None:
-                roles: dict = server_data.mythic_prism_roles
-            else:
-                raise Exception
-            paginated = list(roles.items())[20 * (page - 1) : 20 * page]
-
-        embed = discord.Embed(
-            description=f"### Current roles:\n{'\n'.join([f'-# <@&{k}>: <:mythic_prism:1483233288951955538> {v}' for k, v in paginated])}",
-            color=0xFA9C1D,
-        )
-        embed.set_author(name=author.name, icon_url=author.avatar)
-        embed.set_footer(text=f"Page {page} / {ceil(len(paginated) / 20)}")
-        return {"embed": embed, "view": MythicView(page, ceil(len(paginated) / 20))}
-    except Exception:
-        embed = discord.Embed(
-            description="❌ Unable to get server from the database!", color=0xFA9C1D
-        )
-        embed.set_author(name=author.name, icon_url=author.avatar)
-        return {"embed": embed}
-
-
-class MythicView(discord.ui.View):
-    def __init__(
-        self,
-        current_page: int,
-        max_pages: int,
-        function=get_mythic_prism_role_list,  # noqa: ANN001
-    ) -> None:
-        super().__init__()
-        self.current_page = current_page
-        self.max_pages = max_pages
-        self.function = function
-        self.button_callback()
-
-    def button_callback(self) -> None:
-        for child in self.children:
-            if isinstance(child, discord.ui.Button) and child.emoji:
-                if child.emoji.name in ["⏪", "◀️"]:
-                    child.disabled = self.current_page <= 1
-                elif child.emoji.name in ["▶️", "⏩"]:
-                    child.disabled = self.current_page >= self.max_pages
-
-    @discord.ui.button(style=discord.ButtonStyle.primary, emoji="⏪", row=0)
-    async def double_left_callback(
-        self, _: discord.ui.Button, interaction: discord.Interaction
-    ) -> None:
-        self.current_page = 1
-        self.button_callback()
-        await interaction.response.edit_message(
-            embed=(await self.function(interaction, self.current_page))["embed"],
-            view=self,
-        )
-
-    @discord.ui.button(style=discord.ButtonStyle.primary, emoji="◀️", row=0)
-    async def left_callback(
-        self, _: discord.ui.Button, interaction: discord.Interaction
-    ) -> None:
-        self.current_page = max(self.current_page - 1, 1)
-        self.button_callback()
-        await interaction.response.edit_message(
-            embed=(await self.function(interaction, self.current_page))["embed"],
-            view=self,
-        )
-
-    @discord.ui.button(style=discord.ButtonStyle.primary, emoji="▶️", row=0)
-    async def right_callback(
-        self, _: discord.ui.Button, interaction: discord.Interaction
-    ) -> None:
-        self.current_page = min(self.current_page + 1, self.max_pages)
-        self.button_callback()
-        await interaction.response.edit_message(
-            embed=(await self.function(interaction, self.current_page))["embed"],
-            view=self,
-        )
-
-    @discord.ui.button(style=discord.ButtonStyle.primary, emoji="⏩", row=0)
-    async def double_right_callback(
-        self, _: discord.ui.Button, interaction: discord.Interaction
-    ) -> None:
-        self.current_page = self.max_pages
-        self.button_callback()
-        await interaction.response.edit_message(
-            embed=(await self.function(interaction, self.current_page))["embed"],
-            view=self,
-        )
+from src.views import get_mythic_prism_role_list
 
 
 class AdminCommands(commands.Cog):
@@ -301,7 +206,7 @@ class AdminCommands(commands.Cog):
                 server_data = result.scalars().one_or_none()
                 if server_data is not None:
                     roles: dict = server_data.mythic_prism_roles
-                    roles[role.id] = cost
+                    roles[role.id] = {"cost": cost, "name": role.name}
                     stmt = (
                         update(Server)
                         .where(Server.id == ctx.guild_id)
@@ -389,7 +294,7 @@ class AdminCommands(commands.Cog):
                     roles: dict = server_data.mythic_prism_roles
                     if role.id not in roles:
                         raise KeyError
-                    roles[str(role.id)] = cost
+                    roles[str(role.id)]["cost"] = cost
                     stmt = (
                         update(Server)
                         .where(Server.id == ctx.guild_id)

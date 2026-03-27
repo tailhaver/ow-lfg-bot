@@ -43,7 +43,7 @@ async def create_vc(
             category=discord.utils.get(
                 ctx.guild.categories, id=server_data.voice_channel_category
             ),
-            user_limit=5 if '5v5' in mode else 6
+            user_limit=5 if "5v5" in mode else 6,
         )
         db_session.add(VoiceChannel(id=new_vc.id, owner=ctx.author.id))
         await db_session.commit()
