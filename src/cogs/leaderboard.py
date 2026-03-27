@@ -165,7 +165,10 @@ class LeaderboardCommands(commands.Cog):
     def __init__(self, bot: discord.Bot) -> None:
         self.bot = bot
 
-    @commands.slash_command(name="leaderboard", description="")
+    @commands.slash_command(
+        name="leaderboard",
+        description="View the server level or voice call leaderboard!",
+    )
     @discord.option(
         "type",
         type=discord.SlashCommandOptionType.string,

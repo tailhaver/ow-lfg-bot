@@ -74,7 +74,9 @@ class LevellingCommands(commands.Cog):
     def cog_unload(self):
         self.add_voice_call_time.cancel()
 
-    @commands.slash_command(name="level", description="")
+    @commands.slash_command(
+        name="level", description="Get the level of yourself or another user"
+    )
     @discord.option(
         "user",
         type=discord.SlashCommandOptionType.user,

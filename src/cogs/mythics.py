@@ -135,17 +135,25 @@ class MythicCommands(commands.Cog):
     def __init__(self, bot: discord.Bot) -> None:
         self.bot = bot
 
-    @mythic_group.command(name="shop", description="")
+    @mythic_group.command(
+        name="shop", description="View all mythic roles available for purchase"
+    )
     async def mythic_shop(self, ctx: discord.ApplicationContext) -> None:
         await ctx.respond(**await create_shop_embed(ctx), ephemeral=True)
 
-    @mythic_group.command(name="inventory", description="")
+    @mythic_group.command(
+        name="inventory", description="See which mythic roles you have purchased!"
+    )
     async def mythic_inventory(self, ctx: discord.ApplicationContext) -> None:
         await ctx.respond(**await create_inventory_embed(ctx, 1), ephemeral=True)
 
-    @mythic_group.command(name="equip", description="")
+    @mythic_group.command(
+        name="equip",
+        description="Equip a Mythic role from one in your inventory, or unequip your current mythic.",
+    )
     @discord.option(
         "role",
+        description="Select a role from your inventory. Alternatively, leave blank to unequip.",
         required=False,
         autocomplete=discord.utils.basic_autocomplete(get_roles_autocomplete),
     )
