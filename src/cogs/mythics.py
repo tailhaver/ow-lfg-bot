@@ -19,7 +19,7 @@ async def get_mythic_prism_count(ctx: discord.ApplicationContext) -> int:
         member = result.scalars().one_or_none()
         level = get_level(member.xp)
         spent_prisms = 0 if member.spent_prisms is None else member.spent_prisms
-        return (level[0] // 5) * 10 - spent_prisms
+        return level[0] * 2 - spent_prisms
 
 
 async def get_mythic_prism_role_list(ctx: discord.ApplicationContext, page: int = 1):
